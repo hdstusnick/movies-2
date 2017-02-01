@@ -45,7 +45,7 @@ class MovieData
 				@rankings[x[1]] = r
 			end	
 		end	
-		@rankings = Hash[@rankings.sort_by{|k, v| v}.reverse]
+		@rankings = Hash[@rankings.sort_by{|_k, v| v}.reverse]
 		return @rankings
 	end
 	#expecting integers as input, this creates and returns an int represents how similar two users were in how they rated movies.
@@ -57,7 +57,6 @@ class MovieData
 		u2 = @movieSeen[user2]
 		# +6 similarity if they have seen the same movie, -1 for each rating step away from each other for the same movie
 		if(u1.length >= u2.length)
-			numUnseen = 0
 			(0..u2.length-1).each do |i|
 				if(u1[i][0].to_i == u2[i][0].to_i)
 					x = 6-(u1[i][1].to_i-u2[i][1].to_i).abs
@@ -84,7 +83,7 @@ class MovieData
 				end
 			end	
 		end	
-		similarToUser = Hash[similarToUser.sort_by{|k, v| v}.reverse]
+		similarToUser = Hash[similarToUser.sort_by{|_k, v| v}.reverse]
 		return similarToUser
 	end	
 	def predict(user, movie)
@@ -103,7 +102,7 @@ class MovieData
 		weightedTotal = 0
 		totalWeights = 0
 	
-		sameMovieUsers.each do |weight, r|
+		sameMovieUsers.each do |weight, _r|
 			totalWeights += (weight.to_i)
 			weightedTotal += ((sameMovieUsers[weight].to_i)*(weight.to_i))
 		end	
