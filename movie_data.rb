@@ -86,12 +86,13 @@ class MovieData
 		similarToUser = Hash[similarToUser.sort_by{|_k, v| v}.reverse]
 		return similarToUser
 	end	
+	#takes two intergers and returns a prediction of the rating the user would give that movie. 
 	def predict(user, movie)
-		simUsers = most_similar(user)
+		simUsers = most_similar(user) # a map of the users ID to how similar they are to the user that was passed in
 		users = simUsers.keys
 		sameMovieUsers = Hash.new
 		users.each do |u|
-			movies = @movieSeen[u]
+			movies = @movieSeen[u] #an array of the movies that were seen by a user and the ratings they gave
 			movies.each do |m, r|
 				if(m[0] == movie.to_s)
 					#add to sameMovieUsers a key of the similarity and the rating that person gave the movie
@@ -101,7 +102,7 @@ class MovieData
 		end	
 		weightedTotal = 0
 		totalWeights = 0
-	
+		#calculates a weighted average. (Sum of the similarity*rating)/(sum of all similarity points)
 		sameMovieUsers.each do |weight, _r|
 			totalWeights += (weight.to_i)
 			weightedTotal += ((sameMovieUsers[weight].to_i)*(weight.to_i))
@@ -118,7 +119,9 @@ class MovieData
 		return @data
 	end	
 end
+#an object with one job. To test the similarity method of the MovieData class
 class Validator
+	#takes two MovieData objects and compares how well the similarity aglorithm did in the base object with the test object
 	def check(b, t)
 		d = t.getData
 		numCorrect = 0
@@ -127,11 +130,7 @@ class Validator
 		count = 0
 		d.each do |u, m, r|
 			guess = b.predict(u, m)
-			count+= 1
-			if ((count%1000) == 0) 
-				puts count
-			end	
-			
+			count+= 1	
 			if (guess == r.to_i)
 				numCorrect+=1
 			else
@@ -139,22 +138,17 @@ class Validator
 				howWrong+= (guess-(r.to_i)).abs	
 			end	
 		end	
-		
-		# puts numCorrect
-		# puts numWrong
-		# puts howWrong/numWrong
 		puts "Number of guesses correct = #{numCorrect}"
 		puts "Number wrong = #{numWrong}"
-		averageCorrect = ((numCorrect.to_f)/count).round(2)
+		averageCorrect = ((numCorrect.to_f)/count).round(3)
 		puts "Percentage correct #{averageCorrect}"
-		averageHowWrong = ((howWrong.to_f)/numWrong).round(2)
+		averageHowWrong = ((howWrong.to_f)/numWrong).round(4)
 		puts "Average incorrectness of wrong guesses = #{averageHowWrong}"
 	end	
 end	
-
-
+#an object with one job. To run the program. 
 class Control
-
+	#creates the two movie data objects and the validator objects and has the validator check the movieData objects for how well the similarity method works
 	def run
 		b = MovieData.new
 		b.load_data('u1.base')
@@ -163,7 +157,6 @@ class Control
 		v = Validator.new
 		v.check(b, t)
 	end	
-
 end	
 
 c = Control.new
