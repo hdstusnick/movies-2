@@ -129,21 +129,27 @@ class Validator
 		d.each do |u, m, r|
 			guess = b.predict(u, m)
 			count+= 1
-			if ((count%100) == 0) 
+			if ((count%1000) == 0) 
 				puts count
 			end	
-			if guess = r
+			
+			if (guess == r.to_i)
 				numCorrect+=1
 			else
 				numWrong+=1
-				howWrong+= (guess-r).abs	
+				howWrong+= (guess-(r.to_i)).abs	
 			end	
 		end	
-		byebug
-		puts numCorrect
-		puts numWrong
-		puts howWrong/numWrong
-
+		
+		# puts numCorrect
+		# puts numWrong
+		# puts howWrong/numWrong
+		puts "Number of guesses correct = #{numCorrect}"
+		puts "Number wrong = #{numWrong}"
+		averageCorrect = ((numCorrect.to_f)/count).round(2)
+		puts "Percentage correct #{averageCorrect}"
+		averageHowWrong = ((howWrong.to_f)/numWrong).round(2)
+		puts "Average incorrectness of wrong guesses = #{averageHowWrong}"
 	end	
 end	
 
@@ -161,14 +167,6 @@ class Control
 
 end	
 
-m = MovieData.new
-m.load_data('u.data')
-popList = m.popularity_list
-puts "Popularity List"
-puts popList
-puts "\n\n Most similar to '1' "
-simList = m.most_similar(1)
-puts simList
 c = Control.new
 c.run
 
