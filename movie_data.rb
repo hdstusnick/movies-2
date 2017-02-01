@@ -111,7 +111,7 @@ class MovieData
 		else	
 		averageRating = weightedTotal/totalWeights
 		end
-		return averageRating.to_i
+		return averageRating.round
 	end	
 
 	def getData
