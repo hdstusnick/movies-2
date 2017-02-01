@@ -109,7 +109,7 @@ class MovieData
 		if totalWeights == 0
 			return 3
 		else	
-		averageRating = weightedTotal/totalWeights
+		averageRating = (weightedTotal.to_f)/totalWeights
 		end
 		return averageRating.round
 	end	
